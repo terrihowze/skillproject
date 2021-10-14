@@ -1,20 +1,25 @@
 const mongoose = require('mongoose');
 const Product = require('../models/product.js');
-const Warehouse = require('../models/company.js');
+const Warehouse = require('../models/product.js');
 
-// const addProduct = async() =>{
-//     try{
-//         //console.log(process.env.URI);
-//         await mongoose.connect(process.env.URI);
-//         const product = new Product({productName, productCost});
-//         const savedProduct = await product.save();
-//         mongoose.connection.close();
-//         return {status: 201, message: `${productName} has successfully been added to inventory!`};
-//     }catch(err){
-//         mongoose.connection.close();
-//         throw {status: 500, error: 'Could not add product to inventory'};
-//     }
-// }
+const addProduct = async({id: uid, name: y, quantity: q}) =>{
+    try{
+        console.log(typeof uid);
+
+        var query = mongoose.Types.ObjectId(uid);
+        console.log(typeof query);
+        await mongoose.connect(process.env.URI);
+        const warehouse = await Warehouse.findOne({_id: query});
+        console.log(warehouse);
+        warehouse.inventory.push({name: y, quantity: q});
+        await warehouse.save();
+        mongoose.connection.close();
+        return {status: 201, message: `${y} has successfully been added to inventory!`};
+    }catch(err){
+        mongoose.connection.close();
+        throw {status: 500, error: 'Could not add product to inventory'};
+    }
+}
 
 // const updateProduct = async(oldid, name) =>{
 //     try{
@@ -49,5 +54,5 @@ const Warehouse = require('../models/company.js');
 
 
  module.exports = {
-     
+     addProduct
   }

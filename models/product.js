@@ -2,11 +2,11 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const productSchema = new Schema({
-    productName:{
+    name:{
         type: String,
         required: true
     },
-    productCost: {
+    quantity: {
         type: Number,
         required: true
     }

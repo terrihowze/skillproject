@@ -14,6 +14,7 @@ router.get('/', async (req, res) =>{
 
 router.post('/', async (req,res) => {
     try{
+        console.log(req.body);
         const data = await addProduct(req.body);
         console.log(data);
         res.sendFile(resolve('public', 'views', 'index.html'));
@@ -34,7 +35,7 @@ router.delete('/:productName', async (req, res) => {
 router.put('/:id', async(req,res) =>{
     try{
         console.log(req.body);
-        const data = await updateProduct(req.params.id, req.body.name);
+        const data = await updateProduct(req.body);
         console.log(data);
     }catch (err){
         res.status(500).json(err);
