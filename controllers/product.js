@@ -17,18 +17,18 @@ const addProduct = async({id: uid, name: y, quantity: q}) =>{
     }
 }
 
-// const updateProduct = async(oldid, name) =>{
-//     try{
-//             var query = mongoose.Types.ObjectId(oldid);
-//             await mongoose.connect(process.env.URI);
-//             await Product.findOneAndUpdate({_id: query}, {productName: name});
-//             mongoose.connection.close();
-//             return;
-//     }catch(err){
-//             mongoose.connection.close();
-//             throw err;
-//     }
-// }
+const updateProduct = async({id: uid, name: y, quantity: q}) =>{
+    try{
+            var query = mongoose.Types.ObjectId(uid);
+            await mongoose.connect(process.env.URI);
+            await Warehouse.updateOne({ _id: query, 'inventory.name': y}, { $set: {'inventory.$.quantity': q}});
+            mongoose.connection.close();
+            return;
+    }catch(err){
+            mongoose.connection.close();
+            throw {status: 500, error: 'Could not update product'};
+    }
+}
 
 
 const deleteProduct = async ({id: uid, name: y}) =>{
@@ -51,6 +51,7 @@ const deleteProduct = async ({id: uid, name: y}) =>{
 
 
  module.exports = {
-     addProduct,
-     deleteProduct
+    addProduct,
+    deleteProduct,
+    updateProduct
   }

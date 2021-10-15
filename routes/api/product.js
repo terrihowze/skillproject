@@ -33,11 +33,10 @@ router.delete('/', async (req, res) => {
     }
 })
 
-router.put('/:id', async(req,res) =>{
+router.put('/', async(req,res) =>{
     try{
         console.log(req.body);
-        const data = await updateProduct(req.body);
-        console.log(data);
+        await updateProduct(req.body);
     }catch (err){
         res.status(500).json(err);
     }

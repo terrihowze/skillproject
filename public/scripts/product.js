@@ -9,6 +9,8 @@ CompanyB.onclick = getProduct;
 CompanyC.value = "CompanyC";
 CompanyC.onclick = getProduct;
 
+
+// delete product functions
 function formdelete(e){
     const uid = e.target.value;
     const form = document.getElementById("forms");
@@ -32,8 +34,11 @@ function deleteProduct(e){
     xhr.open('DELETE','/product')
     xhr.setRequestHeader("Content-Type", "application/json");
     xhr.send(JSON.stringify({id: uid, name: y}));
+    document.getElementById("forms").innerHTML = null;
 }
+// end of delete product functions
 
+//add product functions
 function addbackendprod(e){
     const uid = e.target.value;
     const name = document.getElementById("NC");
@@ -48,7 +53,6 @@ function addbackendprod(e){
     document.getElementById("forms").innerHTML = null;
 
 }
-
 function addProduct(e){
     const uid = e.target.value;
     console.log(uid);
@@ -68,6 +72,47 @@ function addProduct(e){
     form.appendChild(s);
     s.onclick = addbackendprod; 
 }
+//end of delete product functions
+
+// update quantity functions
+function updateQuantity(e){
+    const uid = e.target.value;
+    const name = document.getElementById("UN");
+    const quant = document.getElementById("UQ");
+    const q = quant.value;
+    const y = name.value;
+    const xhr = new XMLHttpRequest();
+    xhr.open('PUT','/product')
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.send(JSON.stringify({id: uid, name: y, quantity: q}));
+    document.getElementById("forms").innerHTML = null;
+
+
+}
+function quantity(e){
+    const uid = e.target.value;
+    const form = document.getElementById("forms");
+    const name = document.createElement("input");
+    name.setAttribute("type", "text");
+    name.setAttribute("id", "UN");
+    const quant = document.createElement("input");
+    quant.setAttribute("type", "number");
+    quant.setAttribute("id", "UQ");
+    const s = document.createElement("button");
+    s.setAttribute("id", "update")
+    s.value = uid;
+    s.innerText = "Submit";
+    form.appendChild(name);
+    form.appendChild(quant);
+    form.appendChild(s);
+    s.onclick = updateQuantity; 
+}
+
+
+
+
+
+// end of update product functions
 function getProduct(e){
     const name = e.target.value;
     console.log(name);
@@ -83,12 +128,16 @@ function getProduct(e){
             div.innerText = `${x.name}`;
             const button = document.createElement('button');
             const button2 = document.createElement('button');
-            button.value = x._id
-            button2.value = x._id
+            const button3 = document.createElement('button');
+            button.value = x._id;
+            button2.value = x._id;
+            button3.value = x._id;
             button.innerText = "Add product to this warehouse";
             button2.innnerText = "Delete product from this warehouse";
+            button3.innnerText = "Update quantity of product";
             div.append(button);
             div.append(button2);
+            div.append(button3);
             y.append(div);
             //     // const button = document.createElement('button');
             //     // const button2 = document.createElement('button');
@@ -104,6 +153,7 @@ function getProduct(e){
             //     // button.onclick = deleteProduct;
             button.onclick= addProduct;
             button2.onclick = formdelete; 
+            button3.onclick = quantity;
                  }
             }
             else{
