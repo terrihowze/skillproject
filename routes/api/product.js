@@ -23,10 +23,11 @@ router.post('/', async (req,res) => {
     }
 });
 
-router.delete('/:productName', async (req, res) => {
+router.delete('/', async (req, res) => {
     try{
-        await deleteProduct(req.params.productName);
-        res.status(200).json({message: `${req.params.productName} has been succesfully deleted`});
+        console.log(req.body);
+        await deleteProduct(req.body);
+        res.status(200).json({message: "succesfully deleted"});
     }catch(err){
         res.status(500).json({error: 'Unable to delete product'});
     }

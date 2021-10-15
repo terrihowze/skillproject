@@ -1,3 +1,4 @@
+// grABBING THE BUTTION FROM CARDS AND SETTING VALUES
 const CompanyA = document.getElementById("CompanyA");
 const CompanyB = document.getElementById("CompanyB");
 const CompanyC = document.getElementById("CompanyC");
@@ -8,17 +9,29 @@ CompanyB.onclick = getProduct;
 CompanyC.value = "CompanyC";
 CompanyC.onclick = getProduct;
 
+function formdelete(e){
+    const uid = e.target.value;
+    const form = document.getElementById("forms");
+    form.setAttribute("class", "form-group")
+    const name = document.createElement("input");
+    name.setAttribute("type", "text");
+    name.setAttribute("id", "delete");
+    const s = document.createElement("button");
+    s.value = uid;
+    s.innerText = "Submit";
+    form.appendChild(name);
+    form.appendChild(s);
+    s.onclick = deleteProduct; 
+}
 
 function deleteProduct(e){
+    const uid = e.target.value;
+    const name = document.getElementById("delete");
+    const y = name.value;
     const xhr = new XMLHttpRequest();
-    xhr.onload = function(){
-        console.log(JSON.parse(xhr.response));
-        if(xhr.status === 200){
-            e.target.parentNode.parentNode.removeChild(e.target.parentNode);
-        }
-    }
-    xhr.open('DELETE', `/product/${e.target.value}`);
-    xhr.send();
+    xhr.open('DELETE','/product')
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.send(JSON.stringify({id: uid, name: y}));
 }
 
 function addbackendprod(e){
@@ -32,28 +45,9 @@ function addbackendprod(e){
     xhr.setRequestHeader("Content-Type", "application/json");
     console.log(JSON.stringify({id: uid, name: y, quantity: q}));
     xhr.send(JSON.stringify({id: uid, name: y, quantity: q}));
+    document.getElementById("forms").innerHTML = null;
 
 }
-
-// function listProduct {
-    
-//     const name = e.target.value;
-//     console.log(name);
-//     const company = JSON.parse(xhr.response);
-//     const nameCHange = document.createElement("input");
-//     const form = document.createElement("form");
-//     nameCHange.setAttribute("type", "text");
-//     nameCHange.setAttribute("id", "NC");
-//     const s = document.createElement("button");
-//     s.value = tail;
-//     s.innerText = "Submit";
-//     form.appendChild(nameCHange);
-//     form.appendChild(s);
-    
-//     xhr.open('PUT',`/product/${id}`)
-//     xhr.setRequestHeader("Content-Type", "application/json");
-//     xhr.send(JSON.stringify({name: y}));
-// }
 
 function addProduct(e){
     const uid = e.target.value;
@@ -65,7 +59,8 @@ function addProduct(e){
     const quant = document.createElement("input");
     quant.setAttribute("type", "number");
     quant.setAttribute("id", "QC");
-    const s = document.createElement("input");
+    const s = document.createElement("button");
+    s.setAttribute("id", "send")
     s.value = uid;
     s.innerText = "Submit";
     form.appendChild(name);
@@ -73,51 +68,27 @@ function addProduct(e){
     form.appendChild(s);
     s.onclick = addbackendprod; 
 }
-    
-
-    // y = document.getElementById('getcontainer');
-    // const xhr = new XMLHttpRequest();
-    // xhr.onload = function(){
-    // const company = JSON.parse(xhr.response);
-    
-    
-    // const tail = e.target.value;
-    // const form = document.createElement("form");
-    // form.setAttribute("id", "forms")
-    // const nameCHange = document.createElement("input");
-    // nameCHange.setAttribute("type", "text");
-    // nameCHange.setAttribute("id", "NC");
-    // const s = document.createElement("button");
-    // s.value = tail;
-    // s.innerText = "Submit";
-    // form.appendChild(nameCHange);
-    // form.appendChild(s);
-    // const formContainer = document.getElementById('updateform');
-    // formContainer.appendChild(form);
-    // s.onclick = changeValue;
-
-
-
 function getProduct(e){
     const name = e.target.value;
     console.log(name);
     y = document.getElementById('getcontainer');
+    y.innerHTML = null;
     const xhr = new XMLHttpRequest();
     xhr.onload = function(){
     const company = JSON.parse(xhr.response);
-    
-    //json.stringify
-    //div.innerText = warehouse.name;
     if(xhr.status === 200){     
         for(x of company.units){
             const div = document.createElement('div');
-            div.setAttribute("class", "d-flex p-2")
+            div.setAttribute("class", "d-flex p-2");
             div.innerText = `${x.name}`;
             const button = document.createElement('button');
+            const button2 = document.createElement('button');
             button.value = x._id
+            button2.value = x._id
             button.innerText = "Add product to this warehouse";
-            button.onclick= addProduct;
+            button2.innnerText = "Delete product from this warehouse";
             div.append(button);
+            div.append(button2);
             y.append(div);
             //     // const button = document.createElement('button');
             //     // const button2 = document.createElement('button');
@@ -131,6 +102,8 @@ function getProduct(e){
             //     // productContainer.append(div);
             //     // button2.onclick = updateButton;
             //     // button.onclick = deleteProduct;
+            button.onclick= addProduct;
+            button2.onclick = formdelete; 
                  }
             }
             else{

@@ -4,13 +4,9 @@ const Warehouse = require('../models/product.js');
 
 const addProduct = async({id: uid, name: y, quantity: q}) =>{
     try{
-        console.log(typeof uid);
-
         var query = mongoose.Types.ObjectId(uid);
-        console.log(typeof query);
         await mongoose.connect(process.env.URI);
         const warehouse = await Warehouse.findOne({_id: query});
-        console.log(warehouse);
         warehouse.inventory.push({name: y, quantity: q});
         await warehouse.save();
         mongoose.connection.close();
@@ -35,17 +31,18 @@ const addProduct = async({id: uid, name: y, quantity: q}) =>{
 // }
 
 
-// const deleteProduct = async (productName) =>{
-//     try{
-//         await mongoose.connect(process.env.URI);
-//         await Product.deleteOne({productName});
-//         mongoose.connection.close();
-//         return;
-//     }catch(err){
-//     mongoose.connection.close();
-//     throw err;
-//     }
-// }
+const deleteProduct = async ({id: uid, name: y}) =>{
+    try{
+        var query = mongoose.Types.ObjectId(uid);
+        await mongoose.connect(process.env.URI);
+        await Warehouse.findOneAndUpdate({_id: query}, {$pull: {inventory: {name: y}}});
+        mongoose.connection.close();
+        return;
+    }catch(err){
+    mongoose.connection.close();
+    throw err;
+    }
+}
 
 
 
@@ -54,5 +51,6 @@ const addProduct = async({id: uid, name: y, quantity: q}) =>{
 
 
  module.exports = {
-     addProduct
+     addProduct,
+     deleteProduct
   }
