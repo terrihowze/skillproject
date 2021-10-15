@@ -182,7 +182,6 @@ function populatedata(e){
     xhr.onload = function(){
     const company = JSON.parse(xhr.response);
     const table = document.getElementById("row")
-    // table.innerHTML = null;
     console.log(company);
     y = document.getElementById('getcontainer');
     y.innerHTML = null;
