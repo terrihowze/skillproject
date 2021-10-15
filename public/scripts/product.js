@@ -18,6 +18,7 @@ function formdelete(e){
     const name = document.createElement("input");
     name.setAttribute("type", "text");
     name.setAttribute("id", "delete");
+    name.setAttribute("placeholder", "name");
     const s = document.createElement("button");
     s.value = uid;
     s.innerText = "Submit";
@@ -60,9 +61,11 @@ function addProduct(e){
     const name = document.createElement("input");
     name.setAttribute("type", "text");
     name.setAttribute("id", "NC");
+    name.setAttribute("placeholder", "name");
     const quant = document.createElement("input");
     quant.setAttribute("type", "number");
     quant.setAttribute("id", "QC");
+    quant.setAttribute("placeholder", "quantity");
     const s = document.createElement("button");
     s.setAttribute("id", "send")
     s.value = uid;
@@ -111,49 +114,57 @@ function quantity(e){
 
 
 
-
 // end of update product functions
+
 function getProduct(e){
     const name = e.target.value;
     console.log(name);
-    y = document.getElementById('getcontainer');
-    y.innerHTML = null;
     const xhr = new XMLHttpRequest();
     xhr.onload = function(){
+    y = document.getElementById('getcontainer');
+    y.innerHTML = null;
+    table = document.getElementById('row');
+    table.innerHTML = null;
     const company = JSON.parse(xhr.response);
     if(xhr.status === 200){     
         for(x of company.units){
             const div = document.createElement('div');
-            div.setAttribute("class", "d-flex p-2");
-            div.innerText = `${x.name}`;
+            div.setAttribute("class", "text-capitalize font-weight-bold")
+            div.innerText = `${x.name}`
             const button = document.createElement('button');
+            const div2 = document.createElement("button");
+            div2.setAttribute("class", "invisible");
+            const div3 = document.createElement("button");
+            const div4 = document.createElement("button");
+            div4.setAttribute("class", "invisible");
+            div3.setAttribute("class", "invisible");
+            button.setAttribute("class", "btn btn-primary mr-3");
             const button2 = document.createElement('button');
+            button2.setAttribute("class", "btn btn-primary mr-3");
             const button3 = document.createElement('button');
+            button3.setAttribute("class", "btn btn-primary mr-3");
+            const button4 = document.createElement('button');
+            button4.setAttribute("class", "btn btn-primary mr-3");
             button.value = x._id;
             button2.value = x._id;
             button3.value = x._id;
-            button.innerText = "Add product to this warehouse";
-            button2.innnerText = "Delete product from this warehouse";
-            button3.innnerText = "Update quantity of product";
+            button4.value = x._id;
+            button.innerText = "Add Product"
+            button2.innerText = "Delete Product";
+            button3.innerText = "Update Quantity";
+            button4.innerText = "Display Products";
             div.append(button);
-            div.append(button2);
-            div.append(button3);
+            div.append(div2);
+            div.appendChild(button2);
+            div.append(div3);
+            div.appendChild(button3);
+            div.appendChild(div4);
+            div.appendChild(button4);
             y.append(div);
-            //     // const button = document.createElement('button');
-            //     // const button2 = document.createElement('button');
-            //     // button.value = x.productName;
-            //     // button2.value = x._id;
-            //     // button2.setAttribute("id", "buttonid")
-            //     // button2.innerText = "Update Product";
-            //     // button.innerText = "DELETE Product";
-            //     // div.append(button);
-            //     // div.append(button2);
-            //     // productContainer.append(div);
-            //     // button2.onclick = updateButton;
-            //     // button.onclick = deleteProduct;
             button.onclick= addProduct;
             button2.onclick = formdelete; 
             button3.onclick = quantity;
+            button4.onclick = populatedata;
                  }
             }
             else{
@@ -162,4 +173,39 @@ function getProduct(e){
     }
     xhr.open('GET', `/warehouse/${name}`);
     xhr.send();
+}
+
+function populatedata(e){
+    const uid = e.target.value;
+    console.log(uid);
+    const xhr = new XMLHttpRequest();
+    xhr.onload = function(){
+    const company = JSON.parse(xhr.response);
+    const table = document.getElementById("row")
+    // table.innerHTML = null;
+    console.log(company);
+    y = document.getElementById('getcontainer');
+    y.innerHTML = null;
+    if(xhr.status === 200){ 
+    for(var y=0; y < company.length; y++){
+        const newR = document.createElement('tr');
+        const newC = document.createElement('td');
+        newC.textContent = company[y].name;
+        newR.appendChild(newC);
+        const newC1 = document.createElement('td');
+        newC1.textContent = company[y].quantity;
+        newR.appendChild(newC1);
+        table.appendChild(newR);
+
+    }
+
+
+
+    }else{
+  Console.log("err");
+ }
+    }
+xhr.open('GET', `/product/${uid}`);
+xhr.send();
+
 }

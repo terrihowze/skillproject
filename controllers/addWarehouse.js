@@ -28,10 +28,6 @@ const getWarehouse = async(name) =>{
         console.log(name);
         const compName = await Company.findOne({ name: name}).populate('units', 'name');
         mongoose.connection.close();
-        for(x of compName.units){
-            console.log(x.name);
-        }
-        //console.log(compName);
         return compName;
     } catch (err) {
         mongoose.connection.close();

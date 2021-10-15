@@ -7,6 +7,10 @@ const addProduct = async({id: uid, name: y, quantity: q}) =>{
         var query = mongoose.Types.ObjectId(uid);
         await mongoose.connect(process.env.URI);
         const warehouse = await Warehouse.findOne({_id: query});
+        if(warehouse.iventory.length > 10)
+        {
+            return ;
+        }
         warehouse.inventory.push({name: y, quantity: q});
         await warehouse.save();
         mongoose.connection.close();
@@ -44,6 +48,20 @@ const deleteProduct = async ({id: uid, name: y}) =>{
     }
 }
 
+const getProduct  = async (uid) =>{
+    try {
+        var query = mongoose.Types.ObjectId(uid);
+        await mongoose.connect(process.env.URI);
+        const warehouse = await Warehouse.findOne({_id: query});
+        mongoose.connection.close();
+        return warehouse.inventory;
+    } catch (err) {
+    mongoose.connection.close();
+    throw err;
+    }
+
+}
+
 
 
 
@@ -53,5 +71,6 @@ const deleteProduct = async ({id: uid, name: y}) =>{
  module.exports = {
     addProduct,
     deleteProduct,
-    updateProduct
+    updateProduct,
+    getProduct
   }

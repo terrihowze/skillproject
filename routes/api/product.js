@@ -1,12 +1,12 @@
 const router = require('express').Router();
 const { resolve } = require('path');
-const { addProduct, deleteProduct, getAllProducts, updateProduct } = require('../../controllers/product.js');
+const { addProduct, deleteProduct, getProduct, updateProduct } = require('../../controllers/product.js');
 
 
-router.get('/', async (req, res) =>{
+router.get('/:uid', async (req, res) =>{
     try {
-        const products = await getAllProducts();
-        res.status(200).json(products);
+    const warehouse = await getProduct(req.params.uid);
+    res.status(200).json(warehouse);
     } catch (err) {
         res.status(500).json(err);
     }
