@@ -11,14 +11,31 @@ CompanyC.onclick = getProduct;
 
 
 // delete product functions
+
+function deleteProduct(e){
+    const form = document.getElementById("forms");
+    //form.innerHTML = null;
+    const uid = e.target.value;
+    const name = document.getElementById("delete");
+    const y = name.value;
+    const xhr = new XMLHttpRequest();
+    xhr.open('DELETE','/product')
+    xhr.setRequestHeader("Content-Type", "application/json");
+    console.log(JSON.stringify({id: uid, name: y}));
+    xhr.send(JSON.stringify({id: uid, name: y}));
+    document.getElementById("forms").innerHTML = null;
+}
+
+
 function formdelete(e){
     const uid = e.target.value;
     const form = document.getElementById("forms");
+    //form.innerHTML = null;
     form.setAttribute("class", "form-group")
     const name = document.createElement("input");
     name.setAttribute("type", "text");
     name.setAttribute("id", "delete");
-    name.setAttribute("placeholder", "name");
+    //name.setAttribute("placeholder", "name");
     const s = document.createElement("button");
     s.value = uid;
     s.innerText = "Submit";
@@ -27,16 +44,6 @@ function formdelete(e){
     s.onclick = deleteProduct; 
 }
 
-function deleteProduct(e){
-    const uid = e.target.value;
-    const name = document.getElementById("delete");
-    const y = name.value;
-    const xhr = new XMLHttpRequest();
-    xhr.open('DELETE','/product')
-    xhr.setRequestHeader("Content-Type", "application/json");
-    xhr.send(JSON.stringify({id: uid, name: y}));
-    document.getElementById("forms").innerHTML = null;
-}
 // end of delete product functions
 
 //add product functions
@@ -52,12 +59,13 @@ function addbackendprod(e){
     console.log(JSON.stringify({id: uid, name: y, quantity: q}));
     xhr.send(JSON.stringify({id: uid, name: y, quantity: q}));
     document.getElementById("forms").innerHTML = null;
-
+    document.getElementById("rows").innerHTML = null;
 }
 function addProduct(e){
     const uid = e.target.value;
     console.log(uid);
     const form = document.getElementById("forms");
+    form.innerHTML = null;
     const name = document.createElement("input");
     name.setAttribute("type", "text");
     name.setAttribute("id", "NC");
@@ -88,13 +96,16 @@ function updateQuantity(e){
     xhr.open('PUT','/product')
     xhr.setRequestHeader("Content-Type", "application/json");
     xhr.send(JSON.stringify({id: uid, name: y, quantity: q}));
-    document.getElementById("forms").innerHTML = null;
+    const form = document.getElementById("forms");
+    form.innerHTML = null;
+    // document.getElementById("rows").innerHTML = null;
 
 
 }
 function quantity(e){
     const uid = e.target.value;
     const form = document.getElementById("forms");
+    form.innerHTML = null;
     const name = document.createElement("input");
     name.setAttribute("type", "text");
     name.setAttribute("id", "UN");
@@ -116,15 +127,16 @@ function quantity(e){
 
 // end of update product functions
 
+// prints warehouses and buttons to do CRUD functions
 function getProduct(e){
     const name = e.target.value;
     console.log(name);
+    const table = document.getElementById("rows");
+    table.innerHTML = null;
     const xhr = new XMLHttpRequest();
     xhr.onload = function(){
     y = document.getElementById('getcontainer');
     y.innerHTML = null;
-    table = document.getElementById('row');
-    table.innerHTML = null;
     const company = JSON.parse(xhr.response);
     if(xhr.status === 200){     
         for(x of company.units){
@@ -175,13 +187,17 @@ function getProduct(e){
     xhr.send();
 }
 
+// dynamically create table with data from slected warehouse
 function populatedata(e){
     const uid = e.target.value;
+    const form = document.getElementById("forms");
+    form.innerHTML = null;
     console.log(uid);
     const xhr = new XMLHttpRequest();
     xhr.onload = function(){
     const company = JSON.parse(xhr.response);
-    const table = document.getElementById("row")
+    const table = document.getElementById("rows");
+    table.innerHTML = null;
     console.log(company);
     y = document.getElementById('getcontainer');
     y.innerHTML = null;
@@ -197,8 +213,6 @@ function populatedata(e){
         table.appendChild(newR);
 
     }
-
-
 
     }else{
   Console.log("err");

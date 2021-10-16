@@ -7,9 +7,9 @@ const addProduct = async({id: uid, name: y, quantity: q}) =>{
         var query = mongoose.Types.ObjectId(uid);
         await mongoose.connect(process.env.URI);
         const warehouse = await Warehouse.findOne({_id: query});
-        if(warehouse.iventory.length > 10)
-        {
-            return ;
+        console.log(warehouse.inventory.length)
+        if(warehouse.inventory.length > 10){
+            throw err
         }
         warehouse.inventory.push({name: y, quantity: q});
         await warehouse.save();
@@ -25,6 +25,7 @@ const updateProduct = async({id: uid, name: y, quantity: q}) =>{
     try{
             var query = mongoose.Types.ObjectId(uid);
             await mongoose.connect(process.env.URI);
+            //find the warehouse with item name specified and set new quantity
             await Warehouse.updateOne({ _id: query, 'inventory.name': y}, { $set: {'inventory.$.quantity': q}});
             mongoose.connection.close();
             return;
@@ -39,6 +40,7 @@ const deleteProduct = async ({id: uid, name: y}) =>{
     try{
         var query = mongoose.Types.ObjectId(uid);
         await mongoose.connect(process.env.URI);
+        //pull object from array with name field that matches
         await Warehouse.findOneAndUpdate({_id: query}, {$pull: {inventory: {name: y}}});
         mongoose.connection.close();
         return;
@@ -48,6 +50,7 @@ const deleteProduct = async ({id: uid, name: y}) =>{
     }
 }
 
+//find warehouse and return inventory of warehouse 
 const getProduct  = async (uid) =>{
     try {
         var query = mongoose.Types.ObjectId(uid);

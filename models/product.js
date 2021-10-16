@@ -15,6 +15,7 @@ const productSchema = new Schema({
 
 const warehouseSchema = new Schema({
     name: String,
+    location: String,
     inventory: [productSchema]
     
 })
